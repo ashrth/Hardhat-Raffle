@@ -21,7 +21,7 @@ module.exports = {
     rinkeby: {
       chainId: 4,
       blockConfirmations: 6,
-      url: RINKEBY_RPC_URL,
+      url: process.env.RPC_URL,
       accounts: [PRIVATE_KEY],
     },
   },
@@ -33,10 +33,7 @@ module.exports = {
     //coinmarketcap: process.env.COINMARKETCAP_API_KEY
   },
   etherscan: {
-    // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
-    apiKey: {
-      rinkeby: ETHERSCAN_API_KEY,
-    },
+    apiKey: process.env.ETHERSCAN_API_KEY,
   },
   solidity: "0.8.7",
   namedAccounts: {

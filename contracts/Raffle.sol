@@ -5,7 +5,7 @@
 // for randomness and automation execution we'll use Chainlink Oracle
 // for triggering the automation process of selectinf the winner we'll use Chainlink Keepers
 
-//SPDX-License-Identifier: MIT
+// SPDX-License-Identifier: MIT
 
 pragma solidity ^0.8.7;
 

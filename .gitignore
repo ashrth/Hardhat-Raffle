@@ -1,7 +1,6 @@
 node_modules
 .env
 .prettierrc
-package.json
 coverage.json
 artifacts
 cache
