@@ -36,8 +36,6 @@ module.exports = {
         // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
         apiKey: {
             rinkeby: ETHERSCAN_API_KEY,
-            
-            
         },
     },
     solidity: "0.8.7",
@@ -50,6 +48,6 @@ module.exports = {
         },
     },
     mocha: {
-        timeout: 300000, //300 seconds max
+        timeout: 500000, //500 seconds max
     },
 }

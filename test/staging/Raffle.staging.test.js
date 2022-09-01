@@ -1,7 +1,7 @@
 const { network, deployments, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
-const { isCallTrace } = require("hardhat/internal/hardhat-network/stack-traces/message-trace")
+
 
 developmentChains.includes(network.name)
     ? describe.skip
@@ -50,7 +50,10 @@ developmentChains.includes(network.name)
                           }
                       })
                       // then entering the raffle
-                      await raffle.enterRaffle({ value: raffleEntranceFee })
+                      console.log("Entering Raffle...")
+                      //await raffle.enterRaffle({ value: raffleEntranceFee })
+                      const tx = await raffle.enterRaffle({ value: raffleEntranceFee })
+                      await tx.wait(2)
                       // and this code wont complete until our listener has finished listening
                       const winnerStartingBalance = await accounts[0].getBalance()
                   })
