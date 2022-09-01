@@ -32,6 +32,14 @@ module.exports = {
         noColors: true,
         //coinmarketcap: process.env.COINMARKETCAP_API_KEY
     },
+    etherscan: {
+        // yarn hardhat verify --network <NETWORK> <CONTRACT_ADDRESS> <CONSTRUCTOR_PARAMETERS>
+        apiKey: {
+            rinkeby: ETHERSCAN_API_KEY,
+            
+            
+        },
+    },
     solidity: "0.8.7",
     namedAccounts: {
         deployer: {
