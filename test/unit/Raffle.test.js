@@ -1,5 +1,5 @@
 const { network, deployments, ethers } = require("hardhat")
-const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
 
 !developmentChains.includes(network.name)
@@ -10,7 +10,7 @@ const { assert, expect } = require("chai")
 
           beforeEach(async function () {
               deployer = (await getNamedAccounts()).deployer
-              await deployments.fixture(["mocks", "raffle"])
+              await deployments.fixture(["all"])
               raffle = await ethers.getContract("Raffle", deployer)
               vrfCoordinatorV2Mock = await ethers.getContract("VRFCoordinatorV2Mock", deployer)
               raffleEntranceFee = await raffle.getEntranceFee()
@@ -47,7 +47,7 @@ const { assert, expect } = require("chai")
               it("doesn't allow entrance when raffle is calculating", async function () {
                   await raffle.enterRaffle({ value: raffleEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
-                  await network.provider.request({ method: "evm_mine", params: [] })
+                  await network.provider.send( "evm_mine",  [] )
                   // we pretemd to be a chainllink keeper
                   await raffle.performUpkeep([])
                   await expect(raffle.enterRaffle({ value: raffleEntranceFee })).to.be.revertedWith(
@@ -58,14 +58,14 @@ const { assert, expect } = require("chai")
           describe("checkUpkeep", function () {
               it("returns false if people haven't sent any ETH", async function () {
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
-                  await network.provider.request({ method: "evm_mine", params: [] })
+                  await network.provider.send( "evm_mine",  [] )
                   const { upkeepNeeded } = await raffle.callStatic.checkUpkeep([])
                   assert(!upkeepNeeded)
               })
               it("returns false if raffle isn't open", async function () {
                   await raffle.enterRaffle({ value: raffleEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
-                  await network.provider.request({ method: "evm_mine", params: [] })
+                  await network.provider.send("evm_mine", [] )
                   await raffle.performUpkeep([])
                   const raffleState = await raffle.getRaffleState()
                   const { upkeepNeeded } = await raffle.callStatic.checkUpkeep([])
@@ -75,14 +75,14 @@ const { assert, expect } = require("chai")
               it("returns false if enough time hasn't passed", async () => {
                   await raffle.enterRaffle({ value: raffleEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() - 5]) // use a higher number here if this test fails
-                  await network.provider.request({ method: "evm_mine", params: [] })
+                  await network.provider.send( "evm_mine",  [] )
                   const { upkeepNeeded } = await raffle.callStatic.checkUpkeep("0x") // upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers)
                   assert(!upkeepNeeded)
               })
               it("returns true if enough time has passed, has players, eth, and is open", async () => {
                   await raffle.enterRaffle({ value: raffleEntranceFee })
                   await network.provider.send("evm_increaseTime", [interval.toNumber() + 1])
-                  await network.provider.request({ method: "evm_mine", params: [] })
+                  await network.provider.send( "evm_mine", [] )
                   const { upkeepNeeded } = await raffle.callStatic.checkUpkeep("0x") // upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers)
                   assert(upkeepNeeded)
               })

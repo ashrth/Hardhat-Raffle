@@ -1,5 +1,5 @@
 const { network, deployments, ethers } = require("hardhat")
-const { developmentChains, networkConfig } = require("../helper-hardhat-config")
+const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
 const { isCallTrace } = require("hardhat/internal/hardhat-network/stack-traces/message-trace")
 
