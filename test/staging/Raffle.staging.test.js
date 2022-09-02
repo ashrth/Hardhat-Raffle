@@ -5,7 +5,7 @@ const { assert, expect } = require("chai")
 
 developmentChains.includes(network.name)
     ? describe.skip
-    : describe("Raffle Unit Tests", function () {
+    : describe("Raffle Staging Tests", function () {
           let raffle, raffleEntranceFee, deployer
 
           beforeEach(async function () {
