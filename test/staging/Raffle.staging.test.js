@@ -1,4 +1,4 @@
-const { network, deployments, ethers } = require("hardhat")
+const { getNamedAccounts, network, deployments, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
 
@@ -19,6 +19,7 @@ developmentChains.includes(network.name)
           describe("fulfillRandomWords", function () {
               it("works with live chainlink keeprs and chainlink VRF, we get a random winner", async function () {
                   // enter the raffle
+                  console.log("Setting up test...")
                   const startingTimeStamp = await raffle.getLatestTimeStamp()
                   const accounts = await ethers.getSigners()
 
@@ -42,18 +43,19 @@ developmentChains.includes(network.name)
                                   winnerEndingBalance.toString(),
                                   winnerStartingBalance.add(raffleEntranceFee).toString()
                               )
-                              assert.equal(endingTimeStamp > startingTimeStamp)
+                              assert(endingTimeStamp > startingTimeStamp)
                               resolve()
                           } catch (error) {
                               console.log(error)
-                              reject(e)
+                              reject(error)
                           }
                       })
                       // then entering the raffle
                       console.log("Entering Raffle...")
                     //   await raffle.enterRaffle({ value: raffleEntranceFee })
                       const tx = await raffle.enterRaffle({ value: raffleEntranceFee })
-                      await tx.wait(4)
+                      await tx.wait(2)
+                      console.log("Ok, time to wait...")
                       // and this code wont complete until our listener has finished listening
                       const winnerStartingBalance = await accounts[0].getBalance()
                   })
