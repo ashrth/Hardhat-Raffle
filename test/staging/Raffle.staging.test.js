@@ -2,7 +2,6 @@ const { getNamedAccounts, network, deployments, ethers } = require("hardhat")
 const { developmentChains, networkConfig } = require("../../helper-hardhat-config")
 const { assert, expect } = require("chai")
 
-
 developmentChains.includes(network.name)
     ? describe.skip
     : describe("Raffle Staging Tests", function () {
@@ -28,7 +27,7 @@ developmentChains.includes(network.name)
                       //Just in case the blockchain moves really fast
                       raffle.once("WinnerPicked", async () => {
                           console.log("WinnerPicked event fired!")
-                          
+
                           try {
                               // add our asserts here
                               const recentWinner = await raffle.getRecentWinner()
@@ -52,7 +51,7 @@ developmentChains.includes(network.name)
                       })
                       // then entering the raffle
                       console.log("Entering Raffle...")
-                    //   await raffle.enterRaffle({ value: raffleEntranceFee })
+                      //   await raffle.enterRaffle({ value: raffleEntranceFee })
                       const tx = await raffle.enterRaffle({ value: raffleEntranceFee })
                       await tx.wait(2)
                       console.log("Ok, time to wait...")
