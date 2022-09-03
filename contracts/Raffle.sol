@@ -89,6 +89,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bytes memory /* checkData*/
     )
         public
+        view
         override
         returns (
             bool upkeepNeeded,
@@ -100,6 +101,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         bool hasPlayers = (s_players.length > 0);
         bool hasBalance = address(this).balance > 0;
         upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+        return (upkeepNeeded, "0x0"); // equivalent to []
     }
 
     function performUpkeep(
