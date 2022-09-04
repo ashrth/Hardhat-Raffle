@@ -11,7 +11,7 @@ pragma solidity ^0.8.7;
 
 import "@chainlink/contracts/src/v0.8/VRFConsumerBaseV2.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/VRFCoordinatorV2Interface.sol";
-import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
+import "@chainlink/contracts/src/v0.8/KeeperCompatible.sol";
 
 error Raffle__NotEnoughETHEntered();
 error Raffle__TransferFailed();
@@ -26,8 +26,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     }
 
     // State Variables
-    uint256 private immutable i_entranceFee;
-    address payable[] private s_players;
+    
     VRFCoordinatorV2Interface private immutable i_vrfCoodinator;
     bytes32 private immutable i_gasLane;
     uint64 private immutable i_subscriptionId;
@@ -40,17 +39,22 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
     RaffleState private s_raffleState;
     uint256 private s_lastTimeStamp;
     uint256 private immutable i_interval;
+    address payable[] private s_players;
+    uint256 private immutable i_entranceFee;
 
     // Events
     event RaffleEnter(address indexed player);
     event RequestedRaffleWinner(uint256 indexed requestId);
-    event WinnerPicked(address indexed winner);
+    event WinnerPicked(address indexed player);
+
+
+// Functions
 
     constructor(
         address vrfCoordinatorV2,
         uint256 entranceFee,
         bytes32 gasLane,
-        uint56 subscriptionId,
+        uint64 subscriptionId,
         uint32 callbackGasLimit,
         uint256 interval
     ) VRFConsumerBaseV2(vrfCoordinatorV2) {
@@ -96,11 +100,11 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
             bytes memory /*performData */
         )
     {
-        bool isOpen = (RaffleState.OPEN == s_raffleState);
+        bool isOpen = RaffleState.OPEN == s_raffleState;
         bool timePassed = ((block.timestamp - s_lastTimeStamp) > i_interval);
-        bool hasPlayers = (s_players.length > 0);
+        bool hasPlayers = s_players.length > 0;
         bool hasBalance = address(this).balance > 0;
-        upkeepNeeded = (isOpen && timePassed && hasPlayers && hasBalance);
+        upkeepNeeded = (timePassed && isOpen && hasBalance && hasPlayers );
         return (upkeepNeeded, "0x0"); // equivalent to []
     }
 
@@ -149,7 +153,7 @@ contract Raffle is VRFConsumerBaseV2, KeeperCompatibleInterface {
         emit WinnerPicked(recentWinner);
     }
 
-    // View / pure functions
+    // View / pure functions / Getter Functions
 
     function getEntranceFee() public view returns (uint256) {
         return i_entranceFee;
